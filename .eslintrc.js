@@ -1,7 +1,9 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    'plugin:import/errors',
+    'plugin:import/typescript'
   ],
   parserOptions: {
     ecmaVersion: 2018,
@@ -19,7 +21,18 @@ module.exports = {
         ignoreParameters: true
       }
     ],
-    '@typescript-eslint/no-unused-vars': 'warn'
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'import/order': ['error', {
+      'groups': [
+        'builtin', 
+        'external', 
+        'internal', 
+        'parent', 
+        'sibling', 
+        'index', 
+        'object'
+      ]
+    }]
   },
   overrides: [
     {

@@ -6,7 +6,7 @@
    "password": "cinema_app",
    "database": "cinema_app",
    "synchronize": true,
-   "logging": false,
+   "logging": true,
    "entities": [
       "src/entity/**/*.ts"
    ],
