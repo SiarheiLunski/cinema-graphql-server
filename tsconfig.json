@@ -9,7 +9,6 @@
       "noImplicitAny": true,
       "strictNullChecks": true,
       "noImplicitThis": true,
-      "noUnusedParameters": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true

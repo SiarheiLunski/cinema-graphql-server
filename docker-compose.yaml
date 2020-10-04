@@ -9,6 +9,10 @@ services:
       POSTGRES_DB: cinema_app
     ports:
       - "25432:5432"
+  redis:
+    image: redis:5.0.9-alpine
+    command: >
+      --requirepass redispassword
     # volumes:
     #   - ./postgres-data:/var/lib/postgresql/data
   # app:

@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { join } from 'path';
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from 'apollo-server-express';
+import * as express from 'express';
 import { createConnection } from 'typeorm';
 import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
@@ -8,6 +9,8 @@ import { addResolversToSchema } from '@graphql-tools/schema';
 import { stitchSchemas } from '@graphql-tools/stitch';
 import { mergeResolvers } from '@graphql-tools/merge';
 import { loadFilesSync } from '@graphql-tools/load-files';
+import { redis } from './cache';
+import { applyRoutes } from './routes';
 
 const registerSchema = loadSchemaSync(join(__dirname, './modules/register/schema.graphql'), {
   loaders: [
@@ -37,9 +40,16 @@ const schemaWithResolvers = addResolversToSchema({
 
 const server = new ApolloServer({
   schema: schemaWithResolvers, 
-  debug: process.env.NODE_ENV === 'development'
+  debug: process.env.NODE_ENV === 'development',
+  context: ({ req }) => ({
+    redis,
+    url: `${req.protocol}://${req.get('host')}`
+  })
 });
 
+const app = applyRoutes(express());
+server.applyMiddleware({ app });
+
 createConnection().then((/* connection */) => {
-  server.listen(4000);
+  app.listen({ port: 4000 });
 });

@@ -1,9 +1,10 @@
 import * as bcrypt from 'bcrypt';
 import * as yup from 'yup';
-import { ApolloError, UserInputError } from 'apollo-server';
+import { ApolloError, UserInputError } from 'apollo-server-express';
 import { Resolvers } from '../../types/schema';
 import { User } from '../../entity/User';
-import { formatYupError } from '../../util/messages';
+import { formatYupError } from '../../utils/messages';
+import { createConfirmEmailLink } from '../../utils/emailConfirmation';
 
 const schema = yup.object().shape({
   email: yup.string().min(3).max(255).email(),
@@ -12,7 +13,7 @@ const schema = yup.object().shape({
 
 export const resolvers: Resolvers = {
   Mutation: {
-    register: async (_, args) => {
+    register: async (_, args, { redis, url }) => {
       try {
         await schema.validate(args, { abortEarly: false });
         const { email, password } = args;
@@ -24,8 +25,11 @@ export const resolvers: Resolvers = {
         if (existingUser) {
           throw new ApolloError('User already exists');
         }
+
         const user = User.create({ email, password: hashedPassword });
         await user.save();
+        const link = await createConfirmEmailLink(url, user.id, redis);
+
         return true;
       } catch (err) {
         if (err instanceof yup.ValidationError) {
