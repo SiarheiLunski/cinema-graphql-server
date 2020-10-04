@@ -5,11 +5,28 @@ import { createConnection } from 'typeorm';
 import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { addResolversToSchema } from '@graphql-tools/schema';
-import { resolvers } from './resolvers';
+import { stitchSchemas } from '@graphql-tools/stitch';
+import { mergeResolvers } from '@graphql-tools/merge';
+import { loadFilesSync } from '@graphql-tools/load-files';
 
-const schema = loadSchemaSync(join(__dirname, 'schema.graphql'), {
+const registerSchema = loadSchemaSync(join(__dirname, './modules/register/schema.graphql'), {
   loaders: [
     new GraphQLFileLoader()
+  ]
+});
+const helloWorldSchema = loadSchemaSync(join(__dirname, './modules/tmp/schema.graphql'), {
+  loaders: [
+    new GraphQLFileLoader()
+  ]
+});
+
+const resolversArray = loadFilesSync(join(__dirname, './modules/**/resolvers.ts'));
+const resolvers = mergeResolvers(resolversArray);
+
+const schema = stitchSchemas({
+  subschemas: [
+    registerSchema,
+    helloWorldSchema
   ]
 });
 
@@ -19,7 +36,8 @@ const schemaWithResolvers = addResolversToSchema({
 });
 
 const server = new ApolloServer({
-  schema: schemaWithResolvers
+  schema: schemaWithResolvers, 
+  debug: process.env.NODE_ENV === 'development'
 });
 
 createConnection().then((/* connection */) => {

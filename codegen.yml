@@ -1,7 +1,8 @@
 schema: schema.graphql
 generates:
   ./src/types/schema.d.ts:
-    schema: ./src/schema.graphql
+    schema: 
+      - 'src/modules/**/*.graphql'
     config:
       useIndexSignature: true
     plugins:
