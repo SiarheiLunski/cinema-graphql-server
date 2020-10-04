@@ -1,6 +1,9 @@
 schema: schema.graphql
 generates:
-  ./src/types.d.ts:
+  ./src/types/schema.d.ts:
     schema: ./src/schema.graphql
+    config:
+      useIndexSignature: true
     plugins:
       - typescript
+      - typescript-resolvers

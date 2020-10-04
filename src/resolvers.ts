@@ -1,7 +1,13 @@
-import { QueryHelloArgs } from './types';
+import { Resolvers } from './types/schema';
 
-export const resolvers = {
+export const resolvers: Resolvers = {
   Query: {
-    hello: (_: any, { name }: QueryHelloArgs) => `Bye, ${name}`
+    hello: (_, { name }) => `Bye, ${name}`
+  },
+  Mutation: {
+    register: (_, { email, password }) => {
+      console.log(email, password);
+      return true;
+    }
   }
 };
