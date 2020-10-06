@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'dotenv/config';
 import { join } from 'path';
 import { ApolloServer } from 'apollo-server-express';
 import * as express from 'express';
@@ -17,11 +18,6 @@ const registerSchema = loadSchemaSync(join(__dirname, './modules/register/schema
     new GraphQLFileLoader()
   ]
 });
-const helloWorldSchema = loadSchemaSync(join(__dirname, './modules/tmp/schema.graphql'), {
-  loaders: [
-    new GraphQLFileLoader()
-  ]
-});
 
 const resolversArray = loadFilesSync(join(__dirname, './modules/**/resolvers.ts'));
 const resolvers = mergeResolvers(resolversArray);
@@ -29,7 +25,6 @@ const resolvers = mergeResolvers(resolversArray);
 const schema = stitchSchemas({
   subschemas: [
     registerSchema,
-    helloWorldSchema
   ]
 });
 

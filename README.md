@@ -1,7 +1,9 @@
-# Awesome Project Build with TypeORM
+# Cinema App GraphQL Server
 
-Steps to run this project:
+## Developing
 
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+To start project locally:
+- Create `.env` file with the appropriate values
+- Install packages by running `npm i`
+- Run `docker-compose up` (you need to have docker-compose installed on your machine)
+- Visit `localhost:4000/graphql` and see GraphQL Playground

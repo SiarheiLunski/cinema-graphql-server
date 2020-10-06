@@ -1,10 +1,10 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import * as yup from 'yup';
 import { ApolloError, UserInputError } from 'apollo-server-express';
 import { Resolvers } from '../../types/schema';
 import { User } from '../../entity/User';
 import { formatYupError } from '../../utils/messages';
-import { createConfirmEmailLink } from '../../utils/emailConfirmation';
+import { createConfirmEmailLink, sendEmail } from '../../utils/email';
 
 const schema = yup.object().shape({
   email: yup.string().min(3).max(255).email(),
@@ -29,7 +29,7 @@ export const resolvers: Resolvers = {
         const user = User.create({ email, password: hashedPassword });
         await user.save();
         const link = await createConfirmEmailLink(url, user.id, redis);
-
+        await sendEmail(email, link);
         return true;
       } catch (err) {
         if (err instanceof yup.ValidationError) {

@@ -10,7 +10,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 FROM base as dev
 ENV NODE_ENV=development
 RUN npm install --only=development
-CMD ["/app/node_modules/.bin/nodemon"]
+CMD ["npm", "run", "dev"]
 
 FROM dev as build
 COPY . .
