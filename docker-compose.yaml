@@ -11,17 +11,17 @@ services:
       - "25432:5432"
   redis:
     image: redis:5.0.9-alpine
-    command: >
-      --requirepass redispassword
-    # volumes:
-    #   - ./postgres-data:/var/lib/postgresql/data
-  # app:
-  #   build:
-  #     context: .
-  #     target: dev
-  #   ports:
-  #     - '5000:5000'
-  #   volumes:
-  #     - .:/app:delegated
-  #   environment:
-  #     NODE_ENV: development
+    command: ["redis-server", "--bind", "redis", "--requirepass", "redispassword"]
+  app:
+    build:
+      context: .
+      target: dev
+    ports:
+      - '4000:4000'
+    volumes:
+      - .:/app:delegated
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - postgres
+      - redis

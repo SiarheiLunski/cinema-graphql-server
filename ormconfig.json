@@ -1,7 +1,7 @@
 {
    "type": "postgres",
-   "host": "localhost",
-   "port": 25432,
+   "host": "postgres",
+   "port": 5432,
    "username": "cinema_app",
    "password": "cinema_app",
    "database": "cinema_app",
