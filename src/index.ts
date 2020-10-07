@@ -13,7 +13,7 @@ import { loadFilesSync } from '@graphql-tools/load-files';
 import { redis } from './cache';
 import { applyRoutes } from './routes';
 
-const registerSchema = loadSchemaSync(join(__dirname, './modules/register/schema.graphql'), {
+const commonSchema = loadSchemaSync(join(__dirname, './modules/**/schema.graphql'), {
   loaders: [
     new GraphQLFileLoader()
   ]
@@ -23,9 +23,7 @@ const resolversArray = loadFilesSync(join(__dirname, './modules/**/resolvers.ts'
 const resolvers = mergeResolvers(resolversArray);
 
 const schema = stitchSchemas({
-  subschemas: [
-    registerSchema,
-  ]
+  subschemas: [commonSchema]
 });
 
 const schemaWithResolvers = addResolversToSchema({
