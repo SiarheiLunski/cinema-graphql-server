@@ -1,3 +1,4 @@
 type Mutation {
   login(email: String!, password: String!): String
+  logout: String
 }

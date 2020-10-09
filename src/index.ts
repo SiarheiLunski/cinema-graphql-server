@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import 'dotenv/config';
+import './utils/setEnv';
 import { join } from 'path';
 import { ApolloServer } from 'apollo-server-express';
 import * as express from 'express';
@@ -34,9 +34,11 @@ const schemaWithResolvers = addResolversToSchema({
 const server = new ApolloServer({
   schema: schemaWithResolvers, 
   debug: process.env.NODE_ENV === 'development',
-  context: ({ req }) => ({
+  context: ({ req, res }) => ({
     redis,
-    url: `${req.protocol}://${req.get('host')}`
+    url: `${req.protocol}://${req.get('host')}`,
+    req,
+    res
   })
 });
 
