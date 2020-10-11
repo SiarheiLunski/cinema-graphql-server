@@ -1,6 +1,6 @@
 type Operation {
   id: Int!
-  name: String!
+  type: String!
   resource: String!
   ownerOnly: Boolean!
 }

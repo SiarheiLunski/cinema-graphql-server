@@ -33,7 +33,7 @@ export type MutationRegisterArgs = {
 export type Operation = {
   __typename?: 'Operation';
   id: Scalars['Int'];
-  name: Scalars['String'];
+  type: Scalars['String'];
   resource: Scalars['String'];
   ownerOnly: Scalars['Boolean'];
 };
@@ -167,7 +167,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type OperationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Operation'] = ResolversParentTypes['Operation']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   resource?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   ownerOnly?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

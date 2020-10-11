@@ -16,9 +16,10 @@ export class Operation extends BaseEntity {
   @Column('varchar')
   resource: string;
 
-  @Column({ 
-    type: 'bool', 
+  @Column({
+    name: 'owner_only',
+    type: 'bool',
     default: true 
   })
-  owner_only: boolean;
+  ownerOnly: boolean;
 }
