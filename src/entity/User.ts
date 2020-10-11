@@ -1,5 +1,6 @@
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, BeforeInsert, ManyToMany, JoinTable } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { Role } from './Role';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -14,6 +15,10 @@ export class User extends BaseEntity {
 
     @Column('boolean', { default: false })
     confirmed: boolean;
+
+    @ManyToMany(type => Role, role => role.users)
+    @JoinTable()
+    roles: Role[];
 
     @BeforeInsert()
     async hashPassword(): Promise<void> {

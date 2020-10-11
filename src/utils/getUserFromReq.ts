@@ -14,7 +14,8 @@ export async function getUserFromReq(req: Request): Promise<UserAuthenticated | 
   if (id) {
     const user = await User.findOne({
       select: ['id', 'email', 'confirmed'],
-      where: { id }
+      where: { id },
+      relations: ['roles']
     });
 
     if (user) { 

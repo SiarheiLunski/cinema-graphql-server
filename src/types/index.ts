@@ -7,3 +7,5 @@ export interface UserAuthenticated {
   email: string;
   confirmed: boolean;
 }
+
+export type OperationType = '*' | 'create' | 'read' | 'update' | 'delete';
