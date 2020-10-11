@@ -3,7 +3,8 @@ import './utils/setEnv';
 import { join } from 'path';
 import { ApolloServer } from 'apollo-server-express';
 import * as express from 'express';
-import { createConnection } from 'typeorm';
+import { createConnection, In } from 'typeorm';
+import * as DataLoader from 'dataloader';
 import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { addResolversToSchema } from '@graphql-tools/schema';
@@ -13,6 +14,8 @@ import { loadFilesSync } from '@graphql-tools/load-files';
 import { redis } from './cache';
 import { applyRoutes } from './routes';
 import { getUserFromReq } from './utils/getUserFromReq';
+import { User } from './entity/User';
+import { Role } from './entity/Role';
 
 const commonSchema = loadSchemaSync(join(__dirname, './modules/**/schema.graphql'), {
   loaders: [
@@ -41,7 +44,23 @@ const server = new ApolloServer({
       redis,
       url: `${req.protocol}://${req.get('host')}`,
       user,
-      res
+      res,
+      rolesLoader: new DataLoader(async (keys: string[]) => {
+        const users = await User.find({
+          where: { id: In(keys)},
+          relations: ['roles']
+        });
+
+        return users.map(user => user.roles);
+      }),
+      operationsLoader: new DataLoader(async (keys: number[]) => {
+        const roles = await Role.find({
+          where: { id: In(keys) },
+          relations: ['operations']
+        });
+
+        return roles.map(role => role.operations);
+      })
     });
   } 
 });

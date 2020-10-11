@@ -1,6 +1,5 @@
 import { Resolvers } from '../../types/schema';
 import { User } from '../../entity/User';
-import { Role } from '../../entity/Role';
 
 export const resolvers: Resolvers = {
   Query: {
@@ -10,14 +9,13 @@ export const resolvers: Resolvers = {
     }
   },
   User: {
-    roles: async (parent) => {
-      console.log(parent);
-      const user = await User.findOne({
-        where: { id: parent.id },
-        relations: ['roles']
-      });
-      if (!user) return [];
-      return user.roles;
+    roles: async (parent, _, ctx) => {
+      return ctx.rolesLoader.load(parent.id);
+    }
+  },
+  Role: {
+    operations: async (parent, _, ctx) => {
+      return ctx.operationsLoader.load(parent.id);
     }
   }
 };
