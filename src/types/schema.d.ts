@@ -35,7 +35,6 @@ export type Operation = {
   id: Scalars['Int'];
   type: Scalars['String'];
   resource: Scalars['String'];
-  ownerOnly: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -169,7 +168,6 @@ export type OperationResolvers<ContextType = any, ParentType extends ResolversPa
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   resource?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  ownerOnly?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

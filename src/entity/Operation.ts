@@ -15,11 +15,4 @@ export class Operation extends BaseEntity {
 
   @Column('varchar')
   resource: string;
-
-  @Column({
-    name: 'owner_only',
-    type: 'bool',
-    default: true 
-  })
-  ownerOnly: boolean;
 }

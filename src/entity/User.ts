@@ -17,11 +17,19 @@ export class User extends BaseEntity {
     confirmed: boolean;
 
     @ManyToMany(type => Role, role => role.users)
-    @JoinTable()
+    @JoinTable({
+      name: 'users_roles',
+      joinColumns: [
+        { name: 'user_id' }
+      ],
+      inverseJoinColumns: [
+        { name: 'role_id' }
+      ]
+    })
     roles: Role[];
 
     @BeforeInsert()
     async hashPassword(): Promise<void> {
-      this.password  = await bcrypt.hash(this.password, 10);
+      this.password = await bcrypt.hash(this.password, 10);
     }
 }

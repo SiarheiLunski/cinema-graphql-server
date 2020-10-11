@@ -4,6 +4,7 @@ import { Resolvers } from '../../types/schema';
 import { User } from '../../entity/User';
 import { formatYupError } from '../../utils/messages';
 import { createConfirmEmailLink, sendEmail } from '../../utils/email';
+import { Role } from '../../entity/Role';
 
 const schema = yup.object().shape({
   email: yup.string().min(3).max(255).email(),
@@ -20,12 +21,20 @@ export const resolvers: Resolvers = {
         const existingUser = await User.findOne({
           where: { email },
           select: ['id']
-        }, );
+        });
         if (existingUser) {
           throw new ApolloError('User already exists');
         }
 
         const user = User.create({ email, password });
+        const customerRole = await Role.findOne({ 
+          where: {
+            name: 'customer'
+          }
+        });
+        if (customerRole) {
+          user.roles = [customerRole];
+        }
         await user.save();
         const link = await createConfirmEmailLink(url, user.id, redis);
         await sendEmail(email, link);

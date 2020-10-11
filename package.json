@@ -43,6 +43,7 @@
       "reflect-metadata": "^0.1.13",
       "sparkpost": "^2.1.4",
       "typeorm": "0.2.26",
+      "typeorm-seeding": "^1.6.1",
       "uuid": "^8.3.0",
       "yup": "^0.29.3"
    },
@@ -51,6 +52,8 @@
       "dev": "npm run graphql-codegen && npm run env-codegen && NODE_ENV=development nodemon",
       "test": "jest",
       "graphql-codegen": "graphql-codegen",
-      "env-codegen": "gen-env-types .env -o src/types/env.d.ts"
+      "env-codegen": "gen-env-types .env -o src/types/env.d.ts",
+      "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
+      "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
    }
 }
