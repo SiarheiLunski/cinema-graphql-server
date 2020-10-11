@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcryptjs';
 import * as yup from 'yup';
 import { ApolloError, UserInputError } from 'apollo-server-express';
 import { Resolvers } from '../../types/schema';
@@ -17,7 +16,7 @@ export const resolvers: Resolvers = {
       try {
         await schema.validate(args, { abortEarly: false });
         const { email, password } = args;
-        const hashedPassword = await bcrypt.hash(password, 10);
+
         const existingUser = await User.findOne({
           where: { email },
           select: ['id']
@@ -26,7 +25,7 @@ export const resolvers: Resolvers = {
           throw new ApolloError('User already exists');
         }
 
-        const user = User.create({ email, password: hashedPassword });
+        const user = User.create({ email, password });
         await user.save();
         const link = await createConfirmEmailLink(url, user.id, redis);
         await sendEmail(email, link);

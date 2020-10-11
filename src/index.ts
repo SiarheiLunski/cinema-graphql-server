@@ -12,6 +12,7 @@ import { mergeResolvers } from '@graphql-tools/merge';
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { redis } from './cache';
 import { applyRoutes } from './routes';
+import { getUserFromReq } from './utils/getUserFromReq';
 
 const commonSchema = loadSchemaSync(join(__dirname, './modules/**/schema.graphql'), {
   loaders: [
@@ -34,12 +35,15 @@ const schemaWithResolvers = addResolversToSchema({
 const server = new ApolloServer({
   schema: schemaWithResolvers, 
   debug: process.env.NODE_ENV === 'development',
-  context: ({ req, res }) => ({
-    redis,
-    url: `${req.protocol}://${req.get('host')}`,
-    req,
-    res
-  })
+  context: async ({ req, res }) => {
+    const user = await getUserFromReq(req);
+    return ({
+      redis,
+      url: `${req.protocol}://${req.get('host')}`,
+      user,
+      res
+    });
+  } 
 });
 
 const app = applyRoutes(express());
